@@ -22,4 +22,4 @@ jobs:
           git config user.email "actions@github.com"
           git add public/emoji-sprite.svg
           git commit -m "Auto-build emoji sprite" || echo "No changes"
-          git push
+          git push 
