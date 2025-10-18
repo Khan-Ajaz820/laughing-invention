@@ -1,8 +1,10 @@
- name: Build Emoji Sprite
+name: Build Emoji Sprite
+
 on:
   push:
     paths:
       - 'emojis/**.svg'
+      - 'build_emoji_sprite.js'
 
 jobs:
   build:
@@ -12,10 +14,12 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 18
-      - run: node build_emoji_sprite.js ./emojis ./public/emoji-sprite.svg
-      - run: |
+      - name: Build emoji sprite
+        run: node build_emoji_sprite.js ./emojis ./public/emoji-sprite.svg
+      - name: Commit and push sprite
+        run: |
           git config user.name "github-actions"
           git config user.email "actions@github.com"
           git add public/emoji-sprite.svg
-          git commit -m "Auto-build sprite" || echo "No changes"
+          git commit -m "Auto-build emoji sprite" || echo "No changes"
           git push
