@@ -1,4 +1,5 @@
 // build_emoji_sprite.js
+//test
 // Usage: hello node build_emoji_sprite.js ./emojis ./dist/emoji-sprite.svg
 
 const fs = require("fs");
