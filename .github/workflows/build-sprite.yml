@@ -1,33 +1,34 @@
-name: Bundle SVG Emojis (UTF-8)
+name: Bundle SVG Emojis
 
 on:
   workflow_dispatch:
   push:
     branches:
       - main
-    paths:
-      - 'sprite/**/*.svg'
 
 jobs:
-  bundle:
+  build-and-bundle:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
+      - name: 🧩 Checkout repository
         uses: actions/checkout@v4
 
-      - name: Setup Node.js
+      - name: 🟢 Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 20
 
-      - name: Run SVG UTF-8 Bundler
+      - name: 📦 Install dependencies (if needed)
         run: |
-          echo "Running SVG UTF-8 Bundler..."
-          node svg_utf8_bundler.js
+          npm install  # or skip if you don’t have package.json
 
-      - name: Upload bundled file
+      - name: 🚀 Run SVG Bundler
+        run: |
+          node ultra_optimized_svg_bundler.js
+
+      - name: 📤 Upload bundled output
         uses: actions/upload-artifact@v4
         with:
-          name: emojiData
+          name: emoji-data
           path: emojiData.js
