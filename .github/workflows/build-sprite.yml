@@ -19,10 +19,6 @@ jobs:
         with:
           node-version: 20
 
-      - name: 📦 Install dependencies (if needed)
-        run: |
-          npm install  # or skip if you don’t have package.json
-
       - name: 🚀 Run SVG Bundler
         run: |
           node ultra_optimized_svg_bundler.js
