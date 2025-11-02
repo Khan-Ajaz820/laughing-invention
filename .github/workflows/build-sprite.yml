@@ -1,25 +1,33 @@
-name: Build Emoji Sprite
+name: Bundle SVG Emojis (UTF-8)
 
 on:
+  workflow_dispatch:
   push:
+    branches:
+      - main
     paths:
-      - 'emojis/**.svg'
-      - 'build_emoji_sprite.js'
+      - 'sprite/**/*.svg'
 
 jobs:
-  build:
+  bundle:
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
-          node-version: 18
-      - name: Build emoji sprite
-        run: node build_emoji_sprite.js ./emojis ./public/emoji-sprite.svg
-      - name: Commit and push sprite
+          node-version: 20
+
+      - name: Run SVG UTF-8 Bundler
         run: |
-          git config user.name "github-actions"
-          git config user.email "actions@github.com"
-          git add public/emoji-sprite.svg
-          git commit -m "Auto-build emoji sprite" || echo "No changes"
-          git push 
+          echo "Running SVG UTF-8 Bundler..."
+          node svg_utf8_bundler.js
+
+      - name: Upload bundled file
+        uses: actions/upload-artifact@v4
+        with:
+          name: emojiData
+          path: emojiData.js
