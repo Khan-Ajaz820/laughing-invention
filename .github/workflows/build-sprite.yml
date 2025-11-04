@@ -1,42 +1,29 @@
-name: Optimize Emojis with SVGO
+name: Optimize SVGs
 
 on:
-  workflow_dispatch: # Run manually
   push:
+    branches: [ main ]
     paths:
-      - "sprite/**.svg" # Run when emoji SVGs change
+      - 'sprite/**/*.svg'
 
 jobs:
   optimize:
     runs-on: ubuntu-latest
-
     steps:
-      - name: 📥 Checkout repository
-        uses: actions/checkout@v4
-
-      - name: ⚙️ Setup Node.js
+      - uses: actions/checkout@v4
+      - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version: 20
 
-      - name: 📦 Install SVGO
-        run: npm install -g svgo
+      - name: Install dependencies
+        run: npm install svgo
 
-      - name: 🧹 Create output folder
-        run: mkdir -p optimized
+      - name: Optimize all SVGs
+        run: node optimize-svgs.js ./sprite ./optimized-emojis
 
-      - name: 🚀 Optimize all SVG emojis
-        run: |
-          for f in sprite/*.svg; do
-            echo "Optimizing $f..."
-            svgo --config=svgo.config.js "$f" -o "optimized/$(basename "$f")"
-          done
-
-      - name: 📦 Compress optimized emojis
-        run: zip -r optimized-emojis.zip optimized
-
-      - name: ⬆️ Upload optimized ZIP artifact
+      - name: Upload optimized SVGs as artifact
         uses: actions/upload-artifact@v4
         with:
           name: optimized-emojis
-          path: optimized-emojis.zip
+          path: ./optimized-emojis
