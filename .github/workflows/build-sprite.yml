@@ -1,7 +1,8 @@
 name: Optimize SVGs
 
 on:
-  push:
+  workflow_dispatch:        # Allows manual trigger
+  push:                     # Auto-run when SVGs change
     branches: [ main ]
     paths:
       - 'sprite/**/*.svg'
@@ -9,21 +10,31 @@ on:
 jobs:
   optimize:
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v4
-      - name: Setup Node
+      - name: 🛎️ Checkout repository
+        uses: actions/checkout@v4
+
+      - name: 🧩 Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 20
 
-      - name: Install dependencies
-        run: npm install svgo
+      - name: 📦 Install dependencies
+        run: |
+          npm install svgo
 
-      - name: Optimize all SVGs
-        run: node optimize-svgs.js ./sprite ./optimized-emojis
+      - name: ⚡ Run SVG optimizer
+        run: |
+          node optimize-svgs.js ./sprite ./optimized-emojis
 
-      - name: Upload optimized SVGs as artifact
+      - name: 📊 Show summary
+        run: |
+          echo "Optimization complete. See optimized files below."
+
+      - name: ⬆️ Upload optimized SVGs
         uses: actions/upload-artifact@v4
         with:
           name: optimized-emojis
           path: ./optimized-emojis
+          if-no-files-found: error
