@@ -1,24 +1,22 @@
-// svgo.config.js - Ultra-optimized for Emoji Mosaics
-// Works perfectly in GitHub Actions (ESM syntax)
+// svgo.config.js - Ultra-optimized for Emoji Mosaics (no warnings)
 
 export default {
-  multipass: true, // Run optimizations multiple times for maximum compression
+  multipass: true, // Multiple optimization passes for maximum compression
 
   plugins: [
+    // Base optimization preset
     {
       name: 'preset-default',
       params: {
         overrides: {
-          // CRITICAL: Keep these for proper rendering
-          removeViewBox: false, // Required for scaling
-          cleanupIds: false, // Keep IDs for sprite usage
+          cleanupIds: false, // Keep IDs for sprite references
 
-          // Override defaults for mosaic optimization
+          // Optimize path data
           convertPathData: {
-            floatPrecision: 1, // Reduce decimal places (HUGE size savings)
+            floatPrecision: 1,
             transformPrecision: 2,
             removeUseless: true,
-            straightCurves: true, // Simplify curves invisible at small sizes
+            straightCurves: true,
             lineShorthands: true,
             curveSmoothShorthands: true,
             makeArcs: {
@@ -27,12 +25,14 @@ export default {
             },
           },
 
+          // Numeric cleanup
           cleanupNumericValues: {
-            floatPrecision: 1, // Maximum compression for small sizes
+            floatPrecision: 1,
           },
 
+          // Transform cleanup
           convertTransform: {
-            degPrecision: 1, // Angle precision
+            degPrecision: 1,
             floatPrecision: 2,
             transformPrecision: 3,
             matrixToTransform: true,
@@ -40,7 +40,7 @@ export default {
             shortScale: true,
             shortRotate: true,
             removeUseless: true,
-            collapseIntoOne: true, // Combine transforms
+            collapseIntoOne: true,
             leadingZero: true,
             negativeExtraSpace: false,
           },
@@ -48,14 +48,17 @@ export default {
       },
     },
 
-    // Remove ALL unnecessary metadata
+    // Important: keep viewBox intact (placed separately, no warnings now)
+    { name: 'removeViewBox', active: false },
+
+    // Remove unnecessary metadata
     'removeDoctype',
     'removeXMLProcInst',
     'removeComments',
     'removeMetadata',
     'removeEditorsNSData',
-    'removeTitle', // Not needed in mosaic
-    'removeDesc', // Not needed in mosaic
+    'removeTitle',
+    'removeDesc',
 
     // Aggressive attribute cleanup
     'cleanupAttrs',
@@ -64,36 +67,25 @@ export default {
     'removeUselessStrokeAndFill',
 
     // Style optimization
-    {
-      name: 'inlineStyles',
-      params: { onlyMatchedOnce: false },
-    },
-    {
-      name: 'minifyStyles',
-      params: {
-        usage: { force: true }, // Aggressive style minification
-      },
-    },
+    { name: 'inlineStyles', params: { onlyMatchedOnce: false } },
+    { name: 'minifyStyles', params: { usage: { force: true } } },
     'mergeStyles',
 
     // Color optimization
     {
       name: 'convertColors',
       params: {
-        shorthex: true, // #ffffff -> #fff
-        shortname: true, // Use color names when shorter
+        shorthex: true,
+        shortname: true,
         currentColor: true,
       },
     },
 
-    // Path optimization
+    // Path and shape optimizations
     'convertShapeToPath',
     'convertEllipseToCircle',
-    {
-      name: 'mergePaths',
-      params: { force: true, noSpaceAfterFlags: true },
-    },
-    'convertPathData', // Already configured above
+    { name: 'mergePaths', params: { force: true, noSpaceAfterFlags: true } },
+    'convertPathData',
 
     // Group and structure optimization
     'moveElemsAttrsToGroup',
@@ -113,12 +105,9 @@ export default {
     'cleanupEnableBackground',
     'cleanupIds',
     'removeRasterImages',
-
-    // Final optimization pass
     'removeXMLNS',
   ],
 
-  // Additional options
   js2svg: {
     indent: 0,
     pretty: false,
