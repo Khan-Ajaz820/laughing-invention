@@ -6,7 +6,7 @@ on:
       - main
     paths:
       - "sprite/**/*.svg"
-  workflow_dispatch:  # allows manual trigger
+  workflow_dispatch:
 
 jobs:
   optimize:
