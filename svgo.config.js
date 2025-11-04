@@ -1,9 +1,9 @@
 // svgo.config.js - Ultra-optimized for Emoji Mosaics
-// Save this file in your project root
+// Works perfectly in GitHub Actions (ESM syntax)
 
-module.exports = {
+export default {
   multipass: true, // Run optimizations multiple times for maximum compression
-  
+
   plugins: [
     {
       name: 'preset-default',
@@ -12,7 +12,7 @@ module.exports = {
           // CRITICAL: Keep these for proper rendering
           removeViewBox: false, // Required for scaling
           cleanupIds: false, // Keep IDs for sprite usage
-          
+
           // Override defaults for mosaic optimization
           convertPathData: {
             floatPrecision: 1, // Reduce decimal places (HUGE size savings)
@@ -23,14 +23,14 @@ module.exports = {
             curveSmoothShorthands: true,
             makeArcs: {
               threshold: 2.5,
-              tolerance: 0.5
-            }
+              tolerance: 0.5,
+            },
           },
-          
+
           cleanupNumericValues: {
-            floatPrecision: 1 // Maximum compression for small sizes
+            floatPrecision: 1, // Maximum compression for small sizes
           },
-          
+
           convertTransform: {
             degPrecision: 1, // Angle precision
             floatPrecision: 2,
@@ -42,12 +42,12 @@ module.exports = {
             removeUseless: true,
             collapseIntoOne: true, // Combine transforms
             leadingZero: true,
-            negativeExtraSpace: false
-          }
-        }
-      }
+            negativeExtraSpace: false,
+          },
+        },
+      },
     },
-    
+
     // Remove ALL unnecessary metadata
     'removeDoctype',
     'removeXMLProcInst',
@@ -56,58 +56,51 @@ module.exports = {
     'removeEditorsNSData',
     'removeTitle', // Not needed in mosaic
     'removeDesc', // Not needed in mosaic
-    
+
     // Aggressive attribute cleanup
     'cleanupAttrs',
     'removeUnknownsAndDefaults',
     'removeNonInheritableGroupAttrs',
     'removeUselessStrokeAndFill',
-    
+
     // Style optimization
     {
       name: 'inlineStyles',
-      params: {
-        onlyMatchedOnce: false
-      }
+      params: { onlyMatchedOnce: false },
     },
     {
       name: 'minifyStyles',
       params: {
-        usage: {
-          force: true // Aggressive style minification
-        }
-      }
+        usage: { force: true }, // Aggressive style minification
+      },
     },
     'mergeStyles',
-    
+
     // Color optimization
     {
       name: 'convertColors',
       params: {
         shorthex: true, // #ffffff -> #fff
         shortname: true, // Use color names when shorter
-        currentColor: true
-      }
+        currentColor: true,
+      },
     },
-    
-    // Path optimization (CRITICAL for file size)
-    'convertShapeToPath', // Convert circles/rectangles to paths
+
+    // Path optimization
+    'convertShapeToPath',
     'convertEllipseToCircle',
     {
       name: 'mergePaths',
-      params: {
-        force: true, // Aggressive path merging
-        noSpaceAfterFlags: true
-      }
+      params: { force: true, noSpaceAfterFlags: true },
     },
-    'convertPathData', // Already configured in preset-default override
-    
+    'convertPathData', // Already configured above
+
     // Group and structure optimization
     'moveElemsAttrsToGroup',
     'moveGroupAttrsToElems',
-    'collapseGroups', // Flatten unnecessary groups
+    'collapseGroups',
     'sortDefsChildren',
-    
+
     // Remove empty/useless elements
     'removeEmptyAttrs',
     'removeEmptyText',
@@ -115,19 +108,19 @@ module.exports = {
     'removeHiddenElems',
     'removeUselessDefs',
     'removeUnusedNS',
-    
+
     // Cleanup
     'cleanupEnableBackground',
     'cleanupIds',
-    'removeRasterImages', // Remove embedded raster images if any
-    
+    'removeRasterImages',
+
     // Final optimization pass
-    'removeXMLNS', // Remove xmlns if possible (add at end)
+    'removeXMLNS',
   ],
-  
+
   // Additional options
   js2svg: {
-    indent: 0, // No indentation = smaller file
-    pretty: false // No formatting = smaller file
-  }
+    indent: 0,
+    pretty: false,
+  },
 };
