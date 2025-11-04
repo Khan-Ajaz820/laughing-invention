@@ -6,24 +6,7 @@ const { optimize } = require('svgo');
 const svgoConfig = {
   multipass: true, // Run optimizations multiple times for maximum compression
   plugins: [
-    {
-      name: 'preset-default',
-      params: {
-        overrides: {
-          // Keep viewBox - critical for scaling
-          removeViewBox: false,
-          // Keep IDs if they're referenced
-          cleanupIds: {
-            remove: true,
-            minify: true,
-            preserve: [],
-            preservePrefixes: [],
-            force: false
-          }
-        }
-      }
-    },
-    // Additional aggressive optimizations
+    'preset-default',
     'removeDoctype',
     'removeXMLProcInst',
     'removeComments',
@@ -55,13 +38,7 @@ const svgoConfig = {
     'removeUnusedNS',
     'sortDefsChildren',
     'removeTitle',
-    'removeDesc',
-    {
-      name: 'removeAttrs',
-      params: {
-        attrs: '(data-.*|class)' // Remove data attributes and classes if not needed
-      }
-    }
+    'removeDesc'
   ],
   js2svg: {
     indent: 0, // No indentation
