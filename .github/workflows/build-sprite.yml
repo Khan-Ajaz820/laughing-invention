@@ -27,7 +27,7 @@ jobs:
 
       - name: 🚀 Optimize all SVG emojis
         run: |
-          for f in emojis/*.svg; do
+          for f in sprite/*.svg; do
             echo "Optimizing $f..."
             svgo --config=svgo.config.js "$f" -o "optimized/$(basename "$f")"
           done
