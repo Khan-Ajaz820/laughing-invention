@@ -1,30 +1,36 @@
-name: Bundle SVG Emojis
+name: Optimize Emoji SVGs
 
 on:
-  workflow_dispatch:
   push:
     branches:
       - main
+    paths:
+      - "sprite/**/*.svg"
+  workflow_dispatch:
 
 jobs:
-  build-and-bundle:
+  optimize:
     runs-on: ubuntu-latest
 
     steps:
-      - name: 🧩 Checkout repository
+      - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: 🟢 Setup Node.js
+      - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 20
 
-      - name: 🚀 Run SVG Bundler
-        run: |
-          node ultra_optimized_svg_bundler.js
+      - name: Install SVGO
+        run: npm install -g svgo
 
-      - name: 📤 Upload bundled output
-        uses: actions/upload-artifact@v4
-        with:
-          name: emoji-data
-          path: emojiData.js
+      - name: Optimize SVGs to output folder
+        run: svgo -f ./sprite -o ./optimized-sprite --config=svgo-config.js
+
+      - name: Commit optimized files
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git add optimized-sprite
+          git commit -m "Optimize SVGs via SVGO Action" || echo "No changes to commit"
+          git push
