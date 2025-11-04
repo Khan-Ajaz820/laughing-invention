@@ -4,7 +4,7 @@ on:
   workflow_dispatch: # Run manually
   push:
     paths:
-      - "emojis/**.svg" # Run when emoji SVGs change
+      - "sprite/**.svg" # Run when emoji SVGs change
 
 jobs:
   optimize:
